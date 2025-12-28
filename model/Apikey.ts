@@ -7,7 +7,7 @@
 
 import mongoose, { Types, Document, Schema, Model } from "mongoose";
 
-interface ApiKeyModelprops extends Document {
+export interface ApiKeyModelprops extends Document {
   projectId: Types.ObjectId;
   apiKey: string;
   createdAt: Date;

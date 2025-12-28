@@ -41,9 +41,14 @@ export async function getContentByApiKey(
   apiKey: string
 ): Promise<Types.ObjectId | null> {
   if (!apiKey) return null;
+
   await connectToDatabase();
 
-  const projectid = ApiKeyModel.findOne({ apiKey: apiKey });
-  if (!projectid) return null;
-  return projectid._id;
+  const apiKeyDoc = await ApiKeyModel.findOne({ apiKey })
+    .select("projectId")
+    .lean();
+
+  if (!apiKeyDoc) return null;
+
+  return apiKeyDoc.projectId;
 }
