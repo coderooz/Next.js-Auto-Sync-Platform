@@ -2,21 +2,21 @@
 
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI as string;
-
-if (!MONGO_URI) {
-  throw new Error("❌ MONGO_URI is not defined");
-}
-
 declare global {
   // eslint-disable-next-line no-var
   var mongooseConn: Promise<typeof mongoose> | null;
 }
 
 /**
- * Singleton MongoDB connection for Next.js (Vercel safe)
+ * Singleton MongoDB connection for Next.js (Vercel-safe)
  */
 export async function connectToDatabase() {
+  const MONGO_URI = process.env.MONGO_URI;
+
+  if (!MONGO_URI) {
+    throw new Error("❌ MONGO_URI is not defined");
+  }
+
   if (global.mongooseConn) {
     return global.mongooseConn;
   }
