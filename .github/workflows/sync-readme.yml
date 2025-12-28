@@ -1,0 +1,25 @@
+# .github/workflows/sync-readme.yml
+name: Sync README to Website
+
+on:
+  push:
+    paths:
+      - "README.md"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send README to API
+        run: |
+          README=$(cat README.md | jq -Rs .)
+          curl -X POST https://next-js-auto-sync-platform.vercel.app/api/projects/update \
+            -H "Content-Type: application/json" \
+            -H "X-API-KEY: ${{ secrets.PROJECT_SYNC_KEY }}" \
+            -d "{
+              \"slug\": \"my-project\",
+              \"repoUrl\": \"https://github.com/username/repo\",
+              \"readme\": $README
+            }"
