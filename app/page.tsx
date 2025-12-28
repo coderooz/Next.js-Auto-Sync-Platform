@@ -1,14 +1,25 @@
 /** @format */
 
-import Link from "next/link";
 import ApiComponent from "@/components/blocks/ApiKeyItem";
 import PostCardComponent from "@/components/blocks/CardComponent";
+import { getAllProjects } from "@/lib/actions/project";
 
-export default function homePage() {
+export default async function HomePage() {
+  const projects = await getAllProjects();
+
   return (
-    <main className='flex flex-col w-full h-full justify-center items-center'>
+    <main className='flex flex-col gap-6 w-full h-full items-center p-6'>
       <ApiComponent />
-      <PostCardComponent title='Post 1' link='/content/post-1' />
+
+      <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+        {projects.map((project) => (
+          <PostCardComponent
+            key={project.slug}
+            title={project.name}
+            link={`/content/${project.slug}`}
+          />
+        ))}
+      </section>
     </main>
   );
 }
